@@ -60,7 +60,7 @@ fun QueryScreen(
                     BotHandler.sendNewNews(it.take(5))
                 }
                 RefreshNewsInteractor.startGettingUpdateNews(lastQuery.value) {
-
+                    BotHandler.sendNewNews(it)
                 }
                 isOpen.value = false
             }
