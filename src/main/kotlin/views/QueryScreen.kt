@@ -1,8 +1,8 @@
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import theme.TelegramColors
 
@@ -25,9 +24,10 @@ fun QueryScreen(
 
     Column {
         OutlinedTextField(
-            modifier = Modifier.padding(PaddingValues(16.dp, 8.dp)),
+            modifier = Modifier.padding(PaddingValues(16.dp, 8.dp)).width(288.dp),
             value = lastQuery.value,
             enabled = true,
+            singleLine = true,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Search,
@@ -48,10 +48,15 @@ fun QueryScreen(
             }
         )
 
-        OutlinedButton(
-            modifier = Modifier.padding(PaddingValues(16.dp, 8.dp, 16.dp, 16.dp)),
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = TelegramColors.buttonColor
+            ),
+            modifier = Modifier
+                .padding(PaddingValues(16.dp, 8.dp, 16.dp, 16.dp))
+                .width(288.dp),
             onClick = {
-
+                BotHandler.sendNewNotification(lastQuery.value)
             }
         ) {
             Text("Найти")

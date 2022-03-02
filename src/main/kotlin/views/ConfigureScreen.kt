@@ -4,18 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import theme.TelegramColors
@@ -34,10 +30,10 @@ fun ConfigureScreen(
 
 
     Column(
-        modifier = Modifier.background(TelegramColors.leftBarSelection)
+        modifier = Modifier.background(TelegramColors.backgroundMain)
     ) {
         OutlinedTextField(
-            modifier = Modifier.padding(PaddingValues(16.dp, 8.dp)).fillMaxWidth(),
+            modifier = Modifier.padding(PaddingValues(16.dp, 8.dp)).width(496.dp),
             value = telegramBotToken.value,
             enabled = true,
             leadingIcon = { Icon(
@@ -56,7 +52,7 @@ fun ConfigureScreen(
         )
         OutlinedTextField(
 
-            modifier = Modifier.padding(PaddingValues(16.dp, 8.dp)).fillMaxWidth(),
+            modifier = Modifier.padding(PaddingValues(16.dp, 8.dp)).width(496.dp),
             value = telegramGroupId.value,
             enabled = true,
             leadingIcon = { Icon(
@@ -74,18 +70,21 @@ fun ConfigureScreen(
             label = { Text(color = Color.White, text = "Group or User ID") }
         )
 
-        OutlinedButton(
-            modifier = Modifier.fillMaxWidth().padding(PaddingValues(16.dp, 8.dp, 16.dp, 16.dp)),
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = TelegramColors.buttonColor
+            ),
+            modifier = Modifier.padding(PaddingValues(16.dp, 8.dp, 16.dp, 16.dp)).width(496.dp),
             onClick = {
 
                 when {
                     telegramBotToken.value.text.isBlank() -> {
                         errorTokenState.value = true
-                        return@OutlinedButton
+                        return@Button
                     }
                     telegramGroupId.value.text.isBlank() -> {
                         errorGroupIdState.value = true
-                        return@OutlinedButton
+                        return@Button
                     }
                 }
 

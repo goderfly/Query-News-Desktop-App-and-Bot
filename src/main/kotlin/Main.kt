@@ -6,31 +6,21 @@ import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import compose.icons.AllIcons
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Regular
-import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.regular.WindowClose
-import compose.icons.fontawesomeicons.regular.WindowMaximize
 import compose.icons.fontawesomeicons.regular.WindowMinimize
-import compose.icons.fontawesomeicons.solid.WindowClose
-import compose.icons.fontawesomeicons.solid.WindowMaximize
-import compose.icons.fontawesomeicons.solid.WindowMinimize
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -38,9 +28,6 @@ import theme.Colors
 import theme.TelegramColors
 import theme.typography
 import utils.getCenterScreenLocation
-import java.awt.image.BufferedImage
-import java.io.File
-import javax.imageio.ImageIO
 import kotlin.system.exitProcess
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -80,6 +67,9 @@ fun main() = application {
     }
     if (isOpenNewsMain.value) {
         MainNewsWindow(isOpenNewsMain)
+        runCatching { BotHandler.registerTelegramBot() }
+            .onFailure { println("onFailure registerTelegramBot ${it.printStackTrace()}") }
+            .onSuccess { println("success registerTelegramBot") }
     }
 }
 
@@ -89,24 +79,76 @@ private fun ConfigureWindow(
     isOpenConfigure: MutableState<Boolean>,
     isOpenNewsMain: MutableState<Boolean>
 ) {
+    val state = rememberWindowState(
+        width = Dp.Unspecified,
+        height = Dp.Unspecified,
+        position = getCenterScreenLocation()
+    )
 
     Window(
         title = "Query Desktop App Configure Screen",
         onCloseRequest = { isOpenConfigure.value = false },
-        state = rememberWindowState(
-            size = WindowSize(606.dp, 260.dp),
-            position = getCenterScreenLocation()
-        ),
+        state = state,
         resizable = false,
+        undecorated = true,
         alwaysOnTop = false
     ) {
-        MaterialTheme(
-            colors = Colors.material,
-            typography = typography,
+        Column(
+            modifier = Modifier.background(TelegramColors.backgroundMain)
         ) {
-            ConfigureScreen(isOpenConfigure, isOpenNewsMain)
-        }
+            WindowDraggableArea(
+                modifier = Modifier.shadow(4.dp)
+            ) {
+                Box(Modifier.width(528.dp).height(24.dp).background(TelegramColors.backgroundBar))
+                Row(
+                    modifier = Modifier.width(528.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Box(
+                        Modifier
+                            .size(24.dp)
+                            .clickable {
+                                state.isMinimized = !state.isMinimized
+                            }
+                    ) {
+                        Icon(
+                            imageVector = FontAwesomeIcons.Regular.WindowMinimize,
+                            contentDescription = "",
+                            tint = Color.LightGray,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .padding(horizontal = 6.dp)
+                                .alpha(0.6f)
+                        )
+                    }
+                    Box(
+                        Modifier
+                            .size(24.dp)
+                            .clickable {
+                                exitProcess(0)
+                            }
+                    ) {
+                        Icon(
+                            imageVector = FontAwesomeIcons.Regular.WindowClose,
+                            contentDescription = "",
+                            tint = Color.LightGray,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .padding(horizontal = 6.dp)
+                                .alpha(0.6f)
+                        )
+                    }
 
+                }
+
+            }
+            MaterialTheme(
+                colors = Colors.material,
+                typography = typography,
+            ) {
+                ConfigureScreen(isOpenConfigure, isOpenNewsMain)
+            }
+        }
     }
 }
 
@@ -142,12 +184,12 @@ private fun MainNewsWindow(
         }
 
         Column(
-            modifier = Modifier.background(TelegramColors.leftBar)
+            modifier = Modifier.background(TelegramColors.backgroundMain)
         ) {
             WindowDraggableArea(
                 modifier = Modifier.shadow(4.dp)
             ) {
-                Box(Modifier.width(320.dp).height(24.dp).background(TelegramColors.menuBar))
+                Box(Modifier.width(320.dp).height(24.dp).background(TelegramColors.backgroundBar))
                 Row(
                     modifier = Modifier.width(320.dp),
                     horizontalArrangement = Arrangement.End
