@@ -2,16 +2,16 @@ import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-plugins {
-    kotlin("jvm") version "1.5.10"
-    id("org.jetbrains.compose") version "0.4.0"
-}
-
 group = "com.mirbor"
 version = "1.0"
 
+plugins {
+    kotlin("jvm")
+    id("org.jetbrains.compose")
+}
+
 repositories {
-    jcenter()
+    google()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
@@ -21,7 +21,7 @@ dependencies {
 
     //load svg
     implementation("org.apache.xmlgraphics:batik-all:1.13")
-
+    implementation("br.com.devsrsouza.compose.icons.jetbrains:font-awesome:1.0.0")
     implementation ("com.squareup.okhttp3:okhttp:4.9.0")
     implementation ("com.github.pengrad:java-telegram-bot-api:5.2.0")
 }
