@@ -56,10 +56,16 @@ fun QueryScreen(
                 .padding(PaddingValues(16.dp, 8.dp, 16.dp, 16.dp))
                 .width(288.dp),
             onClick = {
-                BotHandler.sendNewNotification(lastQuery.value)
+                ReceiveNewsByQueryInteractor.getNewsForQuery(lastQuery.value) {
+                    BotHandler.sendNewNews(it.take(5))
+                }
+                RefreshNewsInteractor.startGettingUpdateNews(lastQuery.value) {
+
+                }
+                isOpen.value = false
             }
         ) {
-            Text("Найти")
+            Text("Отслеживать")
         }
     }
 

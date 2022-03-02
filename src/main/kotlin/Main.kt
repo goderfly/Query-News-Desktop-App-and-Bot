@@ -70,6 +70,8 @@ fun main() = application {
         runCatching { BotHandler.registerTelegramBot() }
             .onFailure { println("onFailure registerTelegramBot ${it.printStackTrace()}") }
             .onSuccess { println("success registerTelegramBot") }
+    } else {
+        println("========")
     }
 }
 

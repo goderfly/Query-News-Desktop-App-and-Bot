@@ -24,6 +24,13 @@ dependencies {
     implementation("br.com.devsrsouza.compose.icons.jetbrains:font-awesome:1.0.0")
     implementation ("com.squareup.okhttp3:okhttp:4.9.0")
     implementation ("com.github.pengrad:java-telegram-bot-api:5.2.0")
+
+    //networking
+    implementation ("com.github.kittinunf.fuel:fuel:2.3.1")
+    implementation ("com.github.kittinunf.fuel:fuel-gson:2.3.1")
+
+    //html parsing
+    implementation ("org.jsoup:jsoup:1.14.3")
 }
 
 tasks.withType<KotlinCompile>() {

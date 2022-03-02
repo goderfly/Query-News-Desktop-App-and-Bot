@@ -20,7 +20,7 @@ object BotHandler {
             try {
 
                 if (update.message() != null && update.message()?.viaBot()?.isBot == true) {
-                 //todo
+                    //todo
                 }
 
                 if (update.inlineQuery() != null && update.inlineQuery().query().isNotEmpty()) {
@@ -79,36 +79,28 @@ object BotHandler {
     }
 
     fun sendNewNotification(text: String?) {
-        val l = bot.execute(SendMessage(ContentRepository.telegramGroupId, text).parseMode(ParseMode.HTML))
-        println(l.message())
-        println(l.isOk)
+        bot.execute(SendMessage(ContentRepository.telegramGroupId, text).parseMode(ParseMode.HTML))
     }
 
-    fun editPinnedMessage(text: String, volume: String, lyrics: String) {
-        val inlineKeyboardMarkup = InlineKeyboardMarkup(
-            arrayOf(
-                InlineKeyboardButton("⏮").callbackData("previous_"),
-                InlineKeyboardButton("⏸").callbackData("pause_"),
-                InlineKeyboardButton("⏭").callbackData("next_"),
-            ),
-            arrayOf(
-                InlineKeyboardButton("Громкость -").callbackData("volume-_"),
-                InlineKeyboardButton("Громкость +").callbackData("volume+_"),
-            ),
-            arrayOf(
-                InlineKeyboardButton("Случайная песня КиШ").callbackData("random_"),
-            )
-        )
-
+    fun sendNewNews(newsItem: ReceiveNewsByQueryInteractor.NewsItem) {
         bot.execute(
-            EditMessageText(
-                ContentRepository.telegramGroupId,
-                -1,
-                "Сейчас играет: $text\nТекущая громкость: $volume\n\n$lyrics"
-            ).replyMarkup(inlineKeyboardMarkup)
+            SendMessage(ContentRepository.telegramGroupId, createNewsMessage(newsItem)).parseMode(ParseMode.HTML)
+                .disableWebPagePreview(true)
         )
+    }
 
+    fun sendNewNews(newsItem: List<ReceiveNewsByQueryInteractor.NewsItem>) {
+        newsItem.forEach {
+            bot.execute(
+                SendMessage(ContentRepository.telegramGroupId, createNewsMessage(it)).parseMode(ParseMode.HTML)
+                    .disableWebPagePreview(true)
+            )
+        }
 
     }
+
+    private fun createNewsMessage(newsItem: ReceiveNewsByQueryInteractor.NewsItem) = "<b>${newsItem.header}</b>" +
+            "\n\n${newsItem.subText}" +
+            "\n\n<a href=\"${newsItem.href}\">${newsItem.author} ${newsItem.time}</a>"
 
 }
